@@ -1,0 +1,39 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/venkatesh/personal/picasso/picasso-referals/solidity/contracts/PicassoReferal.sol": {
+      "lastModificationDate": 1640703711141,
+      "contentHash": "ae66c38b06a862a555c7e194f823240d",
+      "sourceName": "contracts/PicassoReferal.sol",
+      "solcConfig": {
+        "version": "0.8.2",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.7.0 <0.9.0"
+      ],
+      "artifacts": [
+        "PicassoReferal"
+      ]
+    }
+  }
+}

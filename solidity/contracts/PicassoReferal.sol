@@ -19,6 +19,8 @@ contract PicassoReferal {
 
     mapping(string => Influencer) public referalCodeMapping;
     mapping(address => address) public feeReceipients;
+    
+    string[] public referalCodes;
 
 
     modifier onlyPicassoAdmin() {
@@ -44,6 +46,8 @@ contract PicassoReferal {
                 referalEnabled: false,
                 referalCode:referalCode
             });
+            
+        referalCodes.push(referalCode);
     }
     
 
@@ -52,7 +56,12 @@ contract PicassoReferal {
     }
     
 
-    function referUser(string memory referalCode, address userAddress) public onlyPicassoAdmin onlyIfReferalEnabled(referalCode){        
+    function referUser(string memory referalCode, address userAddress) public onlyPicassoAdmin onlyIfReferalEnabled(referalCode){
+        require(
+            msg.sender == picassoadmin,
+            "Only picassoadmin can add influencers."
+        );
+
         require(
             feeReceipients[userAddress] == address(0), "The user is already refered."
         );
@@ -61,9 +70,17 @@ contract PicassoReferal {
         feeReceipients[userAddress] = influencer.influencerAddress;
     }
 
-    function getInfluencerName(string memory referalCode) public view returns (string memory) {
-        return referalCodeMapping[referalCode].name;
+
+    function getInfluencerDetails(string memory referalCode) public view returns (string memory, bool, address, string memory) {
+        Influencer memory influencer = referalCodeMapping[referalCode];
+        return (influencer.name, influencer.referalEnabled, influencer.influencerAddress, influencer.referalCode);
     }
+    
+    
+    function getReferalCodes() public view returns(string[] memory){
+        return referalCodes;
+    }
+
 
     function getFeeRecepient(address userAddress) public view returns (address) {
         return feeReceipients[userAddress];

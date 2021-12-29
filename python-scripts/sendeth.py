@@ -3,9 +3,9 @@ import time
 import contract_abi
 from web3 import Web3, HTTPProvider
 
-contract_address     = "0x3A45F15e1d9a9447d5dEB82248291cC0737Fe7eD"
-wallet_private_key   = "48c2341e77218d5a094d50b2b7ee49bd3e4a189fda134cec6501d5f222e037ca"
-wallet_address       = "0x3cB34536F22003E9c2733d67f28A1148dB45F5Ff"
+contract_address     = "0x93fb5919A628C90f0Bd40f9e1dee61E256e37E12"
+wallet_private_key   = "403a6d93a86b9c8e876408903de9588ef4b31763366bc56fbfdde006b846ed7d"
+wallet_address       = "0xdD698f9193fD7398eF00D06365c49BD93F771520"
 
 w3 = Web3(HTTPProvider("https://rpc-mumbai.maticvigil.com/v1/3b64186f6a398fe17e87f323298a22404746cb5c"))
 

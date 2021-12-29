@@ -31,22 +31,21 @@ def refer_user(referalCode, userAddress):
     tx_receipt = w3.eth.getTransactionReceipt(result)
 
     count = 0
-    while tx_receipt is None and (count < 30):
-        time.sleep(10)
-        tx_receipt = w3.eth.getTransactionReceipt(result)
-        print(tx_receipt)
+    txn_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
 
-    if tx_receipt is None:
+    txn_receipt = None
+    count = 0
+    while txn_receipt is None and (count < 30):
+        txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
+        print(txn_receipt)
+        time.sleep(10)
+        count = count + 1
+
+
+    if txn_receipt is None:
         return {'status': 'failed', 'error': 'timeout'}
 
-    processed_receipt = contract.events.OpinionBroadcast().processReceipt(tx_receipt)
-    print(processed_receipt)
-
-    # output = "Address {} Referred: {}"\
-    #     .format(processed_receipt[0].args._soapboxer, processed_receipt[0].args._opinion)
-    # print(output)
-
-    return {'status': 'added', 'processed_receipt': processed_receipt} 
+    return {'status': 'User Referred Successfully', 'txn_receipt': txn_receipt}
 
 # refer_user("ABC","0xF955C57f9EA9Dc8781965FEaE0b6A2acE2BAD6f3")
 getFeeRecepient("0xF955C57f9EA9Dc8781965FEaE0b6A2acE2BAD6f3")

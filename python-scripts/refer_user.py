@@ -1,5 +1,7 @@
-
+import json
 import time
+import base64
+import binascii
 import referal_contract_abi
 from web3 import Web3, HTTPProvider
 
@@ -17,7 +19,18 @@ def getFeeRecepient(userAddress):
     print(fee_receipient)
     return fee_receipient
 
-def refer_user(referalCode, userAddress):
+
+def lambda_handler(event, context):
+    referalCode = json.loads(event['body'])['referalCode']
+    userAddressStr = json.loads(event['body'])['userAddressStr']
+
+    #userAddressStr = '0xd0685baD45552b222ba2B4d1Be6dFcf377970375'
+    userAddress = w3.toChecksumAddress(userAddressStr)
+    if getFeeRecepient(userAddress) != w3.toChecksumAddress('0x0000000000000000000000000000000000000000'):
+         return {
+        'statusCode': 200,
+        'body': json.dumps('''{'status' : 'Already reffered'}''')
+    }
     nonce = w3.eth.getTransactionCount(wallet_address)
     txn_dict = contract.functions.referUser(referalCode, userAddress).buildTransaction({
         'chainId': 80001,
@@ -28,24 +41,9 @@ def refer_user(referalCode, userAddress):
 
     signed_txn = w3.eth.account.signTransaction(txn_dict, private_key=wallet_private_key)
     result = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
-    tx_receipt = w3.eth.getTransactionReceipt(result)
-
-    count = 0
-    txn_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
-
-    txn_receipt = None
-    count = 0
-    while txn_receipt is None and (count < 30):
-        txn_receipt = w3.eth.getTransactionReceipt(txn_hash)
-        print(txn_receipt)
-        time.sleep(10)
-        count = count + 1
-
+    time.sleep(10)
+    txn_receipt = w3.eth.getTransactionReceipt(result)
 
     if txn_receipt is None:
         return {'status': 'failed', 'error': 'timeout'}
-
-    return {'status': 'User Referred Successfully', 'txn_receipt': txn_receipt}
-
-# refer_user("ABC","0xF955C57f9EA9Dc8781965FEaE0b6A2acE2BAD6f3")
-getFeeRecepient("0xF955C57f9EA9Dc8781965FEaE0b6A2acE2BAD6f3")
+    return {'status': 'User Referred Successfully', 'tx_hash': result.hex()}
